@@ -2,21 +2,13 @@
 
 **Guardrail-as-a-Service for Shell Scripting.**
 
-This tool prevents AI Agents from generating "dangerous" or unportable bash (e.g., using bashisms in a `#!/bin/sh` script). It sets up a context and rule structure for AI agents to follow when generating code for your project.
+This **experimental** tool sets up a context and rule structure for AI agents to follow when generating code for your Bash project.
+
+**Disclaimer:** As a power Linux user with limited Bash experience, this tool is developed cautiously. Contributions from experienced Bash developers are highly encouraged.
 
 ## Audience
-- DevOps Engineers
-- Site Reliability Engineers (SREs)
+
 - Linux Power Users
-
-## Platform Support
-
-| Platform | Shell | Status |
-| :--- | :--- | :--- |
-| **Ubuntu/Debian** | Bash | ✅ Supported |
-| **RHEL/CentOS** | Bash | ✅ Supported |
-| **macOS** | Zsh/Bash | ✅ Supported |
-| **Alpine Linux** | Ash | ⚠️ Partial (Bash required) |
 
 ## Safety First
 This tool and the scripts it generates adhere to strict safety standards:
@@ -53,4 +45,5 @@ cd contextoForBash
 Please see `AGENTS-STYLE.md` for our bash style guide. We use `shellcheck` to ensure code quality.
 
 ## License
-Apache 2.0
+
+[MIT Licence](LICENSE)
