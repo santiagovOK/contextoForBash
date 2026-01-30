@@ -1,0 +1,13 @@
+# Git & Commit Conventions
+- Use **Conventional Commits** for all changes:
+  - `feat:` for new features.
+  - `fix:` for bug fixes.
+  - `docs:` for documentation changes.
+  - `style:` for changes that do not affect the meaning of the code (white-space, formatting, etc).
+  - `refactor:` for code changes that neither fix a bug nor add a feature.
+  - `perf:` for code changes that improve performance.
+  - `test:` for adding missing tests or correcting existing tests.
+  - `chore:` for changes to the build process or auxiliary tools and libraries.
+- Keep the first line (summary) under 50 characters.
+- Use the imperative mood in the subject line (e.g., "add rule" instead of "added rule").
+- Provide a detailed description in the body if the change is complex.

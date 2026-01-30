@@ -1,8 +1,5 @@
 scripts/
-lib/AGENTS-FUNCTIONS.md
-AGENTS*.md
-skills/
-tests/AGENTS-TESTING.md
+test_output/
 
 # Allow templates to be tracked
 !templates/
