@@ -3,3 +3,7 @@ lib/AGENTS-FUNCTIONS.md
 AGENTS*.md
 skills/
 tests/AGENTS-TESTING.md
+
+# Allow templates to be tracked
+!templates/
+!templates/**
