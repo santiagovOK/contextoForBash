@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-REPO_URL="https://github.com/your-username/contextoForBash.git"
+REPO_URL="https://github.com/santiagovOK/contextoForBash.git"
 INSTALL_DIR="${HOME}/.contextoForBash"
 BIN_NAME="contexto-bash"
 
