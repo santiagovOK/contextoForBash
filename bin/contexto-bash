@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+# Professional contextoForBash Entry Point
+
+set -euo pipefail
+IFS=$'\n\t'
+
+readonly VERSION="1.0.0"
+
+# Resolve script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+LIB_DIR="$PROJECT_ROOT/lib"
+TEMPLATES_DIR="$PROJECT_ROOT/templates"
+
+# Source utilities
+# shellcheck source=../lib/utils.sh
+source "$LIB_DIR/utils.sh"
+
+# Trap setup
+trap 'cleanup' EXIT
+trap 'error_handler ${LINENO} "$BASH_COMMAND"' ERR
+
+usage() {
+    echo "Usage: $(basename "$0") [options]"
+    echo "  -p, --path <dir>    Base directory for rules (default: prompt)"
+    echo "  -v, --version       Show version"
+    echo "  -h, --help          Show this help message"
+    exit 0
+}
+
+# Parse arguments
+BASE_DIR=""
+
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        -p|--path)
+            BASE_DIR="$2"
+            shift 2
+            ;;
+        -v|--version)
+            echo "contextoForBash v$VERSION"
+            exit 0
+            ;;
+        -h|--help)
+            usage
+            ;;
+        *)
+            echo "❌ Unknown option: $1"
+            usage
+            ;;
+    esac
+done
+
+echo "🤖 Initializing Agents Rules for Bash/Shell..."
+
+# 1. Detect or Ask for the Script Directory if not provided
+if [[ -z "$BASE_DIR" ]]; then
+    DEFAULT_DIR="scripts"
+    if [ -d "bin" ]; then
+        DEFAULT_DIR="bin"
+    elif [ -d "src" ]; then
+        DEFAULT_DIR="src"
+    fi
+
+    echo -e "\n📍 We need to know where your scripts are located."
+    # Use /dev/tty to ensure read works even if input is piped, though for interactive tools prompt is standard
+    if [ -t 0 ]; then
+        read -r -p "   Enter the script directory (Press Enter for '$DEFAULT_DIR'): " USER_SCRIPT_PATH
+        BASE_DIR="${USER_SCRIPT_PATH:-$DEFAULT_DIR}"
+    else
+        BASE_DIR="$DEFAULT_DIR"
+        echo "   Non-interactive mode detected. Using default: $BASE_DIR"
+    fi
+fi
+
+echo "📂 Setting up rules for: $BASE_DIR"
+
+# 2. Generate Directory and File Structure
+
+echo -e "\n📝 Generating rule files..."
+
+# Common directories
+mkdir -p "$BASE_DIR"
+mkdir -p "tests"
+mkdir -p "lib"
+mkdir -p "skills"
+
+# Layer Rules
+install_template "$TEMPLATES_DIR/AGENTS-CLI.md" "$BASE_DIR/AGENTS-CLI.md"
+install_template "$TEMPLATES_DIR/AGENTS-FUNCTIONS.md" "lib/AGENTS-FUNCTIONS.md"
+install_template "$TEMPLATES_DIR/AGENTS-TESTING.md" "tests/AGENTS-TESTING.md"
+install_template "$TEMPLATES_DIR/AGENTS-STYLE.md" "AGENTS-STYLE.md"
+install_template "$TEMPLATES_DIR/AGENTS-GIT.md" "AGENTS-GIT.md"
+
+# Generate Skills (Expert Roles)
+# ...
+# Generate main AGENTS.md (Orchestrator)
+# ...
+cat <<EOF > AGENTS.md
+# Bash Project Context Map
+
+## Detected Environment
+- **Shell**: $SHELL_VER
+
+## Directory Guidance (Local Context)
+- **Scripts**: [Entrypoints](./$BASE_DIR/AGENTS-CLI.md)
+- **Libraries**: [Functions/Utils](./lib/AGENTS-FUNCTIONS.md)
+- **Testing**: [BATS/ShellCheck](./tests/AGENTS-TESTING.md)
+- **Style Guide**: [Conventions](./AGENTS-STYLE.md)
+- **Git/Commits**: [Conventional Commits](./AGENTS-GIT.md)
+
+## Active Skills (Roles)
+- [Shell Wizard](./skills/SHELL-WIZARD.md)
+- [DevOps Automator](./skills/DEVOPS-AUTOMATOR.md)
+EOF
+echo "   ✅ Created: AGENTS.md (Master File)"
+
+# 4. Git Configuration (.gitignore)
+echo -e "\n🛡️  Git Configuration"
+
+ADD_TO_GIT="n"
+if [ -t 0 ]; then
+    read -r -p "❓ Do you want to add these files (AGENTS.md, skills/, etc.) to .gitignore? [y/N] " RESPONSE
+    if [[ "$RESPONSE" =~ ^[Yy]$ ]]; then
+        ADD_TO_GIT="y"
+    fi
+fi
+
+if [[ "$ADD_TO_GIT" == "y" ]]; then
+    if [ ! -f .gitignore ]; then
+        echo "   Creating .gitignore..."
+        touch .gitignore
+    fi
+    
+    # Add a header if it doesn't exist
+    if ! grep -q "Agents Rules" .gitignore; then
+        echo -e "\n# --- Agents Rules & Context ---" >> .gitignore
+    fi
+
+    # Helper function to append if not present (inline here as it's specific to this step)
+    add_ignore() {
+        local pattern=$1
+        if ! grep -qxF "$pattern" .gitignore;
+ then
+            echo "$pattern" >> .gitignore
+            echo "   ➕ Ignored: $pattern"
+        fi
+    }
+
+    add_ignore "AGENTS.md"
+    add_ignore "AGENTS-*.md"
+    add_ignore "skills/"
+    add_ignore "**/*AGENTS-*.md"
+    
+    echo "✅ .gitignore updated successfully."
+else
+    echo "ℹ️  Skipped .gitignore update."
+fi
+
+echo -e "\n🚀 Done! Your Bash project is ready for AI Agents."

@@ -1,0 +1,10 @@
+# ShellCheck Configuration
+
+# Disable specific checks
+# disable=SC2034  # Unused variables (often false positives in sourcing)
+
+# Enable optional checks
+enable=all
+
+# Set the shell dialect
+shell=bash
