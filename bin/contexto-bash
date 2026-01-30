@@ -97,6 +97,7 @@ install_template "$TEMPLATES_DIR/AGENTS-GIT.md" "AGENTS-GIT.md"
 # ...
 # Generate main AGENTS.md (Orchestrator)
 # ...
+SHELL_VER="$BASH_VERSION"
 cat <<EOF > AGENTS.md
 # Bash Project Context Map
 
