@@ -28,12 +28,12 @@ This tool and the scripts it generates adhere to strict safety standards:
 
 ### Quick Install (curl)
 ```bash
-curl -fsSL https://raw.githubusercontent.com/your-username/contextoForBash/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/santiagovOK/contextoForBash/main/install.sh | bash
 ```
 
 ### Manual Install
 ```bash
-git clone https://github.com/your-username/contextoForBash.git
+git clone https://github.com/santiagovOK/contextoForBash.git
 cd contextoForBash
 ./bin/contexto-bash
 ```
